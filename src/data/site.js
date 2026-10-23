@@ -73,7 +73,7 @@ export const projects = [
   },
   {
     slug: 'distributed-cache', name: 'Distributed Cache', kind: 'Systems from scratch',
-    blurb: 'Consistent-hash ring with 150 virtual nodes per server, O(1) LRU, O(log n) LFU with lazy deletion, TTL expiry, Prometheus + Grafana, and k6 smoke / load / soak / spike tests up to 500 VUs.',
+    blurb: 'A cache that models a cluster: in-process nodes behind a consistent-hash router (150 virtual nodes each), O(1) LRU, O(log n) LFU with lazy deletion, TTL expiry, Prometheus metrics, and k6 smoke / load / soak / spike suites.',
     stat: '~1/N', statLabel: 'keys remapped when a node joins',
     stack: ['Python', 'asyncio', 'FastAPI', 'Prometheus', 'Grafana', 'k6'],
     case: '/projects/systems#cache', repo: 'https://github.com/R4255/Distributed_Cache_System',

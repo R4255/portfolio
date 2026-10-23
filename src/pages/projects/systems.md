@@ -4,7 +4,7 @@ title: Systems from scratch
 kind: Backend · the boxes, opened up
 summary: Day to day I use Redis, Kafka and model servers. On the side I build small versions of them, to understand what they guarantee, where they bend, and how to measure it. Four of those builds.
 stats:
-  - { n: "150", l: "virtual nodes per cache server", c: violet }
+  - { n: "150", l: "virtual nodes per cache node", c: violet }
   - { n: "O(log K + r)", l: "time-window log queries", c: cyan }
   - { n: "0 / 239", l: "failed inference requests under load", c: mint }
   - { n: "0", l: "short-code collisions, by construction", c: gold }
@@ -14,12 +14,12 @@ next: { href: /work, label: Everything else }
 
 <h2 id="cache">Distributed Cache</h2>
 
-A cache cluster with the moving parts of the real thing. [Code ↗](https://github.com/R4255/Distributed_Cache_System)
+A cache that models a cluster. The nodes are in-process shards behind a consistent-hash router, which keeps the routing, eviction and rebalancing logic testable on one machine; running them as separate networked processes is the next step. [Code ↗](https://github.com/R4255/Distributed_Cache_System)
 
 - **Consistent hashing with virtual nodes.** Keys hash (MD5) onto a ring; each physical node owns 150 virtual positions, so load spreads evenly and adding or removing a node remaps only ~1/N of keys instead of nearly all of them, which is what `hash % N` does. (That's the ring on the home page: try adding a node.)
 - **Eviction policies:** O(1) LRU on an `OrderedDict` (replacing an earlier O(n) `min()` scan), O(log n) LFU on a min-heap with version-based lazy deletion, and TTL expiry with background cleanup.
-- **Two front doors:** a Redis-style text protocol over asyncio TCP (`GET`, `SET key value [ttl]`, `DEL`, `STATS`) and a FastAPI REST API with batch get/set, ring inspection (`/ring/debug/{key}` shows where a key routes) and admin endpoints to add or remove nodes at runtime.
-- **Observability and load:** Prometheus metrics with Grafana dashboards, and four k6 suites: smoke, load (ramping to 500 virtual users on an 80/20 read/write mix, with p95 < 100 ms and p99 < 250 ms thresholds), soak and spike.
+- **Two interfaces:** a standalone asyncio TCP server for a single node, speaking a Redis-style text protocol (`GET`, `SET key value [ttl]`, `DEL`, `STATS`); and a FastAPI REST API that routes every key through the ring, with batch get/set, ring inspection (`/ring/debug/{key}` shows where a key routes) and admin endpoints to add or remove nodes at runtime.
+- **Observability and load:** Prometheus metrics (hits, misses, evictions, GET/SET latency histograms) scraped by Prometheus, with Grafana in the Compose stack; and four k6 suites: smoke, load (ramping to 500 virtual users on an 80/20 read/write mix, with p95 < 100 ms and p99 < 250 ms thresholds), a 30-minute soak at 100 users, and a spike to 1,000 users.
 
 <h2 id="logs">In-memory Log Store</h2>
 

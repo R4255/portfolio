@@ -1,0 +1,233 @@
+---
+import Base from '../layouts/Base.astro';
+import { profile, projects } from '../data/site.js';
+
+const p = Object.fromEntries(projects.map(x => [x.slug, x]));
+const systems = ['distributed-cache', 'log-store', 'triton', 'url-shortener'].map(s => p[s]);
+const sections = ['Intro', 'Converse', 'nanoserve', 'Hybrid RAG', 'Systems', 'Experience', 'Contact'];
+---
+<Base solidNav={false} hud={true}>
+  <canvas id="galaxy" aria-hidden="true"></canvas>
+  <noscript><style>#hero-title { position: static; width: auto; height: auto; clip: auto; font: 800 clamp(44px, 10vw, 120px)/1 var(--display); letter-spacing: -.04em; margin-bottom: 18px; } .panel { opacity: 1; transform: none; } .hero { align-items: center; }</style></noscript>
+  <nav class="dots" aria-label="Sections">
+    {sections.map(s => <button type="button" aria-label={`Go to ${s}`}></button>)}
+  </nav>
+
+  <main id="content">
+    <section class="hero" data-form="name" aria-labelledby="hero-title">
+      <div class="stage" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <h1 id="hero-title" class="sr-only">{profile.name}</h1>
+        <p class="kicker">{profile.role}</p>
+        <p class="lede">I build the systems that serve <em>requests and models</em>, and then I measure them.</p>
+        <p class="sub">Backend at <b>Spinny</b>, previously <b>Tata 1mg</b>. Event-driven services at work; LLM agents, inference engines and retrieval on the side, each with an eval or a benchmark.</p>
+        <ul class="cue" aria-hidden="true">
+          <li>scroll to reshape</li><li class="fine-only">move to disturb</li><li><span class="fine-only">hold</span><span class="touch-only">long-press</span> for a black hole</li>
+        </ul>
+        <div class="scroll-line" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section data-form="bars" aria-labelledby="s-converse">
+      <div class="stage" aria-hidden="true"></div>
+      <article class="panel">
+        <p class="tag">01 · AI · LLM agent</p>
+        <h2 id="s-converse">Converse</h2>
+        <p>A grocery app you can just talk to: <b>"add my usual milk, then take me to checkout."</b> The agent searches, fills the cart and drives the UI over a streamed action protocol, and it <b>cannot</b> place an order without your click.</p>
+        <dl class="metrics">
+          <div><dt class="c-gold">93.1%</dt><dd>task success, up from 74.4%, on a 130-task outcome-based eval harness</dd></div>
+          <div><dt class="c-cyan">1.4 s</dt><dd>p50 for a 1.5B model I LoRA fine-tuned to match a 3B</dd></div>
+          <div><dt class="c-mint">13/13</dt><dd>safety tasks, incl. prompt injection; transactional outbox → SQS behind it</dd></div>
+        </dl>
+        <div class="pills"><a class="pill solid" href={p.converse.case}>Case study →</a><a class="pill" href={p.converse.repo} target="_blank" rel="noopener">GitHub ↗</a><a class="pill" href={`${p.converse.case}#demo`}>Demo ▶</a></div>
+      </article>
+    </section>
+
+    <section data-form="kv" aria-labelledby="s-nano">
+      <div class="stage" aria-hidden="true"></div>
+      <article class="panel">
+        <p class="tag">02 · AI infra · from scratch</p>
+        <h2 id="s-nano">nanoserve</h2>
+        <p>An LLM inference engine I wrote to understand serving end to end. The grid is a <b>paged KV cache</b>: memory handed out in blocks as requests arrive, freed when they finish, preempted when memory runs short.</p>
+        <dl class="metrics">
+          <div><dt class="c-cyan">3.6×</dt><dd>faster decoding with my own KV cache, checked token-for-token against Hugging Face</dd></div>
+          <div><dt class="c-mint">7.3×</dt><dd>throughput from continuous batching on the same laptop</dd></div>
+          <div><dt class="c-violet">94%</dt><dd>KV memory utilization once paged, up from 24%</dd></div>
+        </dl>
+        <div class="pills"><a class="pill solid" href={p.nanoserve.case}>Case study →</a><a class="pill" href={p.nanoserve.repo} target="_blank" rel="noopener">GitHub ↗</a></div>
+      </article>
+    </section>
+
+    <section data-form="sphere" aria-labelledby="s-rag">
+      <div class="stage" aria-hidden="true"></div>
+      <article class="panel">
+        <p class="tag">03 · AI · retrieval</p>
+        <h2 id="s-rag">Hybrid RAG</h2>
+        <p>BM25 and dense embeddings fused with Reciprocal Rank Fusion, reranked by a cross-encoder, streamed with citations. <b class="fine-only">Move your cursor over the sphere: you're the query, and the gold points are your nearest neighbours.</b><b class="touch-only">The gold points are a query's nearest neighbours.</b></p>
+        <dl class="metrics">
+          <div><dt class="c-gold">0.728</dt><dd>nDCG@10 on BEIR SciFact, up from 0.646 with BM25 alone</dd></div>
+          <div><dt class="c-cyan">13 ms</dt><dd>p95 for 0.722, the near-best setting at ~55× lower latency</dd></div>
+        </dl>
+        <div class="pills"><a class="pill solid" href={p['hybrid-rag'].case}>Case study →</a><a class="pill" href={p['hybrid-rag'].repo} target="_blank" rel="noopener">GitHub ↗</a></div>
+      </article>
+    </section>
+
+    <section data-form="ring" aria-labelledby="s-sys">
+      <div class="stage" aria-hidden="true"></div>
+      <article class="panel">
+        <p class="tag">04 · Backend · from scratch</p>
+        <h2 id="s-sys">Systems, opened up</h2>
+        <p>I like knowing how the boxes work, so I build small versions of them. That ring is my distributed cache's <b>consistent hashing</b>: keys land on the ring and walk clockwise to the node that owns them. Change the cluster and see how few keys move.</p>
+        <div class="ring-ctl">
+          <button type="button" data-ring="-1">− remove node</button>
+          <button type="button" data-ring="1">+ add node</button>
+        </div>
+        <p class="ring-stat" id="ring-stat" aria-live="polite">Try adding a node.</p>
+        <ul class="sys">
+          {systems.map(s => (
+            <li><a href={s.case}><b>{s.name}</b><span>{s.stat} · {s.statLabel}</span></a></li>
+          ))}
+        </ul>
+        <div class="pills"><a class="pill solid" href="/projects/systems">All systems →</a></div>
+      </article>
+    </section>
+
+    <section data-form="kafka" aria-labelledby="s-exp">
+      <div class="stage" aria-hidden="true"></div>
+      <article class="panel">
+        <p class="tag">05 · Backend · in production</p>
+        <h2 id="s-exp">Shipping at scale</h2>
+        <div class="jobs">
+          <div class="job"><p><b>Spinny</b> <span>SDE I, Backend · 2026 – now</span></p>
+            <ul><li>Dealer-app sell APIs (Postgres, REST): <b>+22%</b> selling efficiency</li><li>Async aggregation with asyncio.gather: <b>3×</b> faster lookups</li></ul></div>
+          <div class="job"><p><b>Tata 1mg</b> <span>SDE I & intern · 2025 – 2026</span></p>
+            <ul><li><b>600GB+</b> Postgres → MongoDB, zero downtime: DMS, CDC, 8-partition Kafka (that's the stream you're looking at)</li><li>SQS Comments microservice at <b>30k+</b> events/day</li><li><b>−80%</b> API latency with Redis request-context caching</li><li>Legacy retries → EventBridge Scheduler + SQS + Redis</li></ul></div>
+        </div>
+        <div class="pills"><a class="pill solid" href="/work#experience">Full experience →</a><a class="pill" href={profile.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a></div>
+      </article>
+    </section>
+
+    <section data-form="hi" aria-labelledby="s-hi">
+      <div class="stage" aria-hidden="true"></div>
+      <article class="panel">
+        <p class="tag">06 · Contact</p>
+        <h2 id="s-hi">Let's build something.</h2>
+        <p>I'm open to <b>{profile.openTo}</b>: services that have to stay up, and the AI systems that run on them.</p>
+        <a class="email" href={`mailto:${profile.email}`}>{profile.email}</a>
+        <div class="pills"><a class="pill solid" href={`mailto:${profile.email}`}>Say hi ✉</a><a class="pill" href={profile.github} target="_blank" rel="noopener">GitHub ↗</a><a class="pill" href={profile.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a></div>
+        <button type="button" class="holdme" data-hold>
+          <span class="core" aria-hidden="true"></span>
+          <span>Hold me, then let go</span>
+        </button>
+      </article>
+    </section>
+  </main>
+</Base>
+
+<script>
+  import { initGalaxy } from '../scripts/galaxy.js';
+  initGalaxy();
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('in')), { threshold: .2 });
+  document.querySelectorAll('.panel').forEach(p => io.observe(p));
+</script>
+
+<style is:global>
+  .top { background: linear-gradient(rgba(6,6,12,.94), rgba(6,6,12,.82)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  @media (min-width: 900px) and (min-height: 480px), (min-width: 700px) and (max-height: 479px) { .top { background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 0; } }
+  .galaxy-labels { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  #galaxy { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; touch-action: pan-y; background: var(--bg); }
+  body.holding { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .touch-only { display: none; }
+  @media (pointer: coarse) { .touch-only { display: inline; } .fine-only { display: none; } }
+
+  /* custom cursor (fine pointers only; added by the script) */
+  body.custom-cursor, body.custom-cursor * { cursor: none !important; }
+  .cur-ring, .cur-dot { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; border-radius: 50%; }
+  .cur-dot { width: 4px; height: 4px; margin: -2px 0 0 -2px; background: #fff; box-shadow: 0 0 10px #fff; }
+  .cur-ring { width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 1.5px solid rgba(232,230,255,.55); transition: width .3s, height .3s, margin .3s, border-color .3s; }
+  .cur-ring.link { width: 60px; height: 60px; margin: -30px 0 0 -30px; border-color: var(--cyan); }
+  .cur-ring.hold { width: 18px; height: 18px; margin: -9px 0 0 -9px; border: 1.5px dashed var(--pink); animation: spin .6s linear infinite; }
+  @keyframes spin { to { rotate: 360deg; } }
+</style>
+
+<style>
+  main { position: relative; z-index: 1; }
+
+  /* ---- stacked layout (phones, portrait tablets): shape in the top band, panel below ---- */
+  section { position: relative; padding: 0 14px 7svh; }
+  .stage { height: min(54svh, 460px); }
+  .hero { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; padding: 60px 18px max(6svh, 24px); }
+  .hero .stage { flex: 1 1 auto; height: auto; min-height: 34svh; width: 100%; }
+  .hero-inner { max-width: 760px; position: relative; text-shadow: 0 0 14px var(--bg), 0 0 4px var(--bg); }
+  .kicker { font: 11px var(--mono); letter-spacing: .25em; color: var(--violet); text-transform: uppercase; }
+  .lede { font: 700 clamp(21px, 2.6vw, 30px)/1.3 var(--display); margin: 12px auto 12px; letter-spacing: -.01em; }
+  /* gradient text is transparent, so a text-shadow would show through it */
+  .lede em { text-shadow: none; font-style: normal; background: linear-gradient(90deg, var(--violet), var(--cyan), var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { color: var(--soft); font-size: clamp(14px, 1.3vw, 16px); max-width: 600px; margin: 0 auto 20px; }
+  .sub b { color: var(--text); font-weight: 500; }
+  .cue { list-style: none; font: 11px var(--mono); color: var(--soft); display: flex; gap: 8px 20px; justify-content: center; flex-wrap: wrap; }
+  .cue li::before { content: "◦ "; color: var(--cyan); }
+  .scroll-line { width: 1px; height: 42px; margin: 16px auto 0; background: linear-gradient(var(--cyan), transparent); animation: drip 1.8s infinite; transform-origin: top; }
+  @keyframes drip { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+  .panel { position: relative; width: 100%; max-width: 560px; margin: 0 auto; padding: 22px 20px; border-radius: 20px;
+    background: linear-gradient(160deg, rgba(20,18,40,.94), rgba(10,10,20,.92)); border: 1px solid var(--line);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    opacity: 0; transform: translateY(28px); transition: opacity .9s, transform .9s cubic-bezier(.2,.8,.2,1); }
+  .panel:global(.in) { opacity: 1; transform: none; }
+  .panel h2 { font: 800 clamp(28px, 3.2vw, 42px)/1.06 var(--display); letter-spacing: -.03em; margin: 10px 0 12px; overflow-wrap: break-word; text-wrap: balance; }
+  .panel > p { color: var(--soft); font-size: 15px; }
+  .panel p b { color: var(--text); font-weight: 500; }
+  .metrics { margin: 16px 0 18px; display: grid; gap: 8px; }
+  .metrics div { display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: baseline; gap: 12px; border-top: 1px solid var(--line); padding-top: 9px; }
+  .metrics dt { font: 800 21px var(--display); letter-spacing: -.02em; white-space: nowrap; }
+  .metrics dd { font-size: 13px; color: var(--soft); }
+
+  .ring-ctl { display: flex; gap: 8px; margin: 16px 0 8px; flex-wrap: wrap; }
+  .ring-ctl button { font: 12px var(--mono); color: var(--text); background: rgba(139,123,255,.12); border: 1px solid rgba(139,123,255,.45); border-radius: 10px; padding: 10px 14px; min-height: 42px; cursor: pointer; }
+  .ring-ctl button:hover { background: rgba(139,123,255,.28); }
+  .ring-ctl button:active { transform: scale(.97); }
+  .ring-stat { font: 12px/1.5 var(--mono); color: var(--mint); min-height: 36px; }
+  .sys { list-style: none; margin: 12px 0 18px; }
+  .sys a { display: grid; gap: 1px; padding: 9px 0; border-top: 1px solid var(--line); text-decoration: none; }
+  .sys a:hover b { color: var(--cyan); }
+  .sys b { font: 700 16px var(--display); transition: color .2s; }
+  .sys span { font-size: 12.5px; color: var(--soft); }
+
+  .jobs { margin: 14px 0 16px; }
+  .job { padding: 10px 0; border-top: 1px solid var(--line); }
+  .job p b { font: 700 17px var(--display); }
+  .job p span { color: var(--soft); font-size: 12.5px; margin-left: 6px; }
+  .job ul { list-style: none; margin-top: 5px; font-size: 13.5px; color: var(--soft); display: grid; gap: 3px; }
+  .job li::before { content: "→ "; color: var(--mint); }
+  .job li b { color: var(--text); font-weight: 600; }
+
+  .email { display: block; font: 700 clamp(17px, 2vw, 21px) var(--display); color: var(--pink); margin: 8px 0; padding: 8px 0; text-decoration: none; overflow-wrap: anywhere; }
+  .email:hover { text-decoration: underline; }
+  .holdme { margin-top: 22px; display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 16px; border-radius: 16px; border: 1px dashed rgba(255,94,168,.5); background: rgba(255,94,168,.06); color: var(--text); font: 13px var(--mono); touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: pointer; }
+  .holdme .core { width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle, #000 35%, var(--pink) 60%, transparent 72%); box-shadow: 0 0 18px rgba(255,94,168,.5); animation: pulse 2s infinite; flex-shrink: 0; }
+  @keyframes pulse { 50% { transform: scale(1.18); } }
+
+  .dots { display: none; }
+  .stage + .panel { margin-top: 0; }
+
+  /* ---- split layout (desktop, landscape tablets & phones): panel left, shape right ---- */
+  @media (min-width: 900px) and (min-height: 480px), (min-width: 700px) and (max-height: 479px) {
+    section { min-height: 100svh; display: flex; align-items: center; padding: 80px var(--gutter) 60px; }
+    .stage, .hero .stage { display: none; }
+    .hero { padding-top: 0; }
+    .panel { background: linear-gradient(160deg, rgba(20,18,40,.78), rgba(8,8,16,.7)); }
+    .panel { width: min(440px, 42vw); margin: 0; padding: 26px; }
+    .metrics div { grid-template-columns: 108px minmax(0, 1fr); }
+    .metrics dt { font-size: 23px; }
+    .dots { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 10; display: flex; flex-direction: column; gap: 6px; }
+    .dots button { width: 22px; height: 22px; border: 0; background: none; padding: 0; cursor: pointer; display: grid; place-items: center; }
+    .dots button::after { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--soft); transition: all .3s; }
+    .dots button:global(.on)::after { background: var(--cyan); border-color: var(--cyan); transform: scale(1.4); box-shadow: 0 0 12px var(--cyan); }
+  }
+  @media (max-height: 479px) and (min-width: 700px) {
+    .hero { padding-bottom: 18px; } .sub, .scroll-line { display: none; }
+    section { padding-top: 64px; }
+  }
+</style>

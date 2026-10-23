@@ -1,0 +1,85 @@
+---
+import Base from './Base.astro';
+
+const { frontmatter: fm } = Astro.props;
+---
+<Base title={fm.title} description={fm.summary}>
+  <main id="content" class="cs">
+    <header class="cs-head">
+      <a class="back" href="/">← back to the galaxy</a>
+      <p class="tag">{fm.kind}</p>
+      <h1>{fm.title}</h1>
+      <p class="summary">{fm.summary}</p>
+      {fm.stats && (
+        <dl class="stats">
+          {fm.stats.map(s => <div><dt class={`c-${s.c || 'violet'}`}>{s.n}</dt><dd>{s.l}</dd></div>)}
+        </dl>
+      )}
+      <div class="pills">
+        {fm.repo && <a class="pill solid" href={fm.repo} target="_blank" rel="noopener">Code on GitHub ↗</a>}
+        {(fm.links || []).map(l => <a class="pill" href={l.href}>{l.label}</a>)}
+      </div>
+      {fm.stack && <div class="chips stack">{fm.stack.map(s => <span>{s}</span>)}</div>}
+    </header>
+    <article class="prose">
+      <slot />
+    </article>
+    {fm.next && (
+      <nav class="next" aria-label="Next project">
+        <span>Next</span>
+        <a href={fm.next.href}>{fm.next.label} →</a>
+      </nav>
+    )}
+  </main>
+</Base>
+
+<style>
+  .cs { position: relative; padding: 110px var(--gutter) 80px; max-width: 900px; margin: 0 auto; }
+  .cs::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(60vw 40vh at 85% 0%, rgba(139,123,255,.16), transparent 70%), radial-gradient(50vw 40vh at 0% 30%, rgba(63,208,255,.08), transparent 70%); }
+  .back { font: 12px var(--mono); color: var(--soft); text-decoration: none; display: inline-block; padding: 10px 0; margin-bottom: 16px; }
+  .back:hover { color: var(--text); }
+  h1 { font: 800 clamp(40px, 8vw, 84px)/1 var(--display); letter-spacing: -.04em; margin: 12px 0 18px; overflow-wrap: anywhere; }
+  .summary { font-size: clamp(17px, 2vw, 20px); color: var(--soft); max-width: 720px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; margin: 32px 0 26px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .stats div { background: var(--bg-2); padding: 16px 18px; }
+  .stats dt { font: 800 clamp(24px, 3.4vw, 32px) var(--display); letter-spacing: -.03em; }
+  .stats dd { font-size: 13px; color: var(--soft); margin-top: 2px; }
+  .stack { margin-top: 18px; }
+  .next { margin-top: 70px; border-top: 1px solid var(--line); padding-top: 26px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .next span { font: 11px var(--mono); color: var(--dim); text-transform: uppercase; letter-spacing: .15em; }
+  .next a { font: 800 clamp(22px, 4vw, 34px) var(--display); text-decoration: none; letter-spacing: -.02em; display: inline-block; padding: 6px 0; }
+  .next a:hover { color: var(--cyan); }
+
+  .prose { margin-top: 56px; font-size: 16.5px; line-height: 1.75; color: #cfcce8; }
+  .prose :global(h2) { font: 800 clamp(24px, 3.4vw, 32px)/1.15 var(--display); color: var(--text); letter-spacing: -.02em; margin: 56px 0 14px; }
+  .prose :global(h3) { font: 700 19px var(--display); color: var(--text); margin: 32px 0 8px; }
+  .prose :global(p), .prose :global(ul), .prose :global(ol) { margin: 0 0 16px; }
+  .prose :global(ul), .prose :global(ol) { padding-left: 22px; }
+  .prose :global(li) { margin-bottom: 6px; }
+  .prose :global(li::marker) { color: var(--violet); }
+  .prose :global(strong) { color: var(--text); font-weight: 600; }
+  .prose :global(a) { color: var(--cyan); text-underline-offset: 3px; }
+  .prose :global(code) { font: .88em var(--mono); background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; color: var(--text); }
+  .prose :global(pre) { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; overflow-x: auto; margin: 0 0 20px; font-size: 13px; line-height: 1.55; }
+  .prose :global(pre code) { background: none; border: 0; padding: 0; font-size: inherit; }
+  .prose :global(table) { display: block; overflow-x: auto; border-collapse: collapse; margin: 0 0 22px; font-size: 14px; -webkit-overflow-scrolling: touch; max-width: 100%; }
+  /* scroll shadows: an edge shadow shows only while there's more to swipe to */
+  .prose :global(table), .prose :global(pre) {
+    background:
+      linear-gradient(90deg, var(--bg) 30%, transparent) left / 40px 100% no-repeat local,
+      linear-gradient(270deg, var(--bg) 30%, transparent) right / 40px 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, rgba(139,123,255,.35), transparent) left / 14px 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, rgba(139,123,255,.35), transparent) right / 14px 100% no-repeat scroll,
+      var(--bg-2);
+  }
+  .prose :global(table) { border-radius: 10px; }
+  .prose :global(th), .prose :global(td) { padding: 9px 14px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+  .prose :global(th) { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--soft); }
+  .prose :global(td strong) { color: var(--gold); }
+  .prose :global(blockquote) { border-left: 2px solid var(--violet); padding: 4px 0 4px 18px; color: var(--soft); margin: 0 0 20px; font-style: italic; }
+  .prose :global(img), .prose :global(video) { border-radius: 14px; border: 1px solid var(--line); margin: 8px 0 6px; width: 100%; height: auto; background: var(--bg-2); }
+  .prose :global(figure) { margin: 26px 0; }
+  .prose :global(figcaption) { font: 12px var(--mono); color: var(--dim); }
+  .prose :global(.grid2) { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+</style>

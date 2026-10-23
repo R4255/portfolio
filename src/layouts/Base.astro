@@ -1,0 +1,48 @@
+---
+import '../styles/global.css';
+import { profile } from '../data/site.js';
+
+const { title, description = `${profile.name}: ${profile.role}. ${profile.tagline}`, solidNav = true, hud = false } = Astro.props;
+const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.role}`;
+const path = Astro.url.pathname;
+const canonical = new URL(path, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta name="theme-color" content="#06060c" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL('/og.png', Astro.site)} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <slot name="head" />
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <header class:list={['top', { solid: solidNav }]}>
+    <a class="logo" href="/" aria-label="Home">rohit<span>.</span>gupta</a>
+    {hud && <span class="hud" id="hud" aria-hidden="true">loss <b>—</b></span>}
+    <nav aria-label="Main">
+      <a href="/work" aria-current={path.startsWith('/work') ? 'page' : undefined}>Work</a>
+      <a class="opt" href={profile.github} target="_blank" rel="noopener">GitHub</a>
+      <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+    </nav>
+  </header>
+  <slot />
+  <footer class="site">
+    <span>© {new Date().getFullYear()} {profile.name} · built with particles and benchmarks</span>
+    <span><a href={`mailto:${profile.email}`}>Email</a><a href={profile.github} target="_blank" rel="noopener">GitHub</a><a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a></span>
+  </footer>
+</body>
+</html>

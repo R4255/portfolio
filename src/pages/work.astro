@@ -1,0 +1,140 @@
+---
+import Base from '../layouts/Base.astro';
+import { profile, experience, education, projects, openSource, skills } from '../data/site.js';
+
+const featured = projects.filter(p => p.featured);
+const systems = projects.filter(p => !p.featured);
+---
+<Base title="Work" description={`${profile.name}: experience, projects and skills. ${profile.tagline}`}>
+  <main id="content" class="work">
+    <header class="intro">
+      <p class="tag">{profile.role}</p>
+      <h1>{profile.name}</h1>
+      <p class="lede">{profile.tagline} Backend engineer at Spinny, previously Tata 1mg: event-driven services, data migrations and APIs in production; LLM agents, inference engines and retrieval systems on the side, every one of them measured.</p>
+      <div class="pills">
+        <a class="pill solid" href={`mailto:${profile.email}`}>Email me</a>
+        <a class="pill" href={profile.github} target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="pill" href={profile.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="pill" href="/">The particle version ✦</a>
+      </div>
+    </header>
+
+    <section id="experience" aria-labelledby="h-exp">
+      <h2 id="h-exp">Experience</h2>
+      <ol class="timeline">
+        {experience.map(job => (
+          <li>
+            <div class="when">{job.when}</div>
+            <div>
+              <h3>{job.company}</h3>
+              <p class="role">{job.role}</p>
+              <ul>{job.points.map(pt => <li>{pt}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section aria-labelledby="h-ai">
+      <h2 id="h-ai">AI systems</h2>
+      <div class="grid">
+        {featured.map(p => (
+          <article class="card">
+            <p class="kind">{p.kind}</p>
+            <h3><a href={p.case}>{p.name}</a></h3>
+            <p class="stat"><b>{p.stat}</b> {p.statLabel}</p>
+            <p class="blurb">{p.blurb}</p>
+            <div class="chips">{p.stack.map(s => <span>{s}</span>)}</div>
+            <div class="links"><a href={p.case}>Case study →</a><a href={p.repo} target="_blank" rel="noopener">Code ↗</a></div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="h-sys">
+      <h2 id="h-sys">Backend systems</h2>
+      <div class="grid">
+        {systems.map(p => (
+          <article class="card">
+            <p class="kind">{p.kind}</p>
+            <h3><a href={p.case}>{p.name}</a></h3>
+            <p class="stat"><b>{p.stat}</b> {p.statLabel}</p>
+            <p class="blurb">{p.blurb}</p>
+            <div class="chips">{p.stack.map(s => <span>{s}</span>)}</div>
+            <div class="links"><a href={p.case}>Details →</a><a href={p.repo} target="_blank" rel="noopener">Code ↗</a></div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="two" aria-label="Skills, open source and education">
+      <div>
+        <h2>Toolbox</h2>
+        <dl class="skills">
+          {skills.map(([k, v]) => <div><dt>{k}</dt><dd class="chips">{v.map(s => <span>{s}</span>)}</dd></div>)}
+        </dl>
+      </div>
+      <div>
+        <h2>Open source</h2>
+        <ul class="plain">{openSource.map(o => <li><a href={o.url} target="_blank" rel="noopener">{o.name}</a>: {o.what}</li>)}</ul>
+        <h2>Education</h2>
+        <p class="edu"><b>{education.school}</b><br />{education.degree}<br /><span>{education.when}</span></p>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="h-cta">
+      <h2 id="h-cta">Open to {profile.openTo}.</h2>
+      <a class="mail" href={`mailto:${profile.email}`}>{profile.email}</a>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .work { max-width: 1080px; margin: 0 auto; padding: 110px var(--gutter) 60px; }
+  .intro h1 { font: 800 clamp(44px, 9vw, 96px)/.95 var(--display); letter-spacing: -.045em; margin: 12px 0 18px; }
+  .lede { font-size: clamp(16px, 1.9vw, 19px); color: var(--soft); max-width: 760px; margin-bottom: 24px; }
+  section { margin-top: 84px; }
+  h2 { font: 800 clamp(26px, 3.6vw, 36px) var(--display); letter-spacing: -.025em; margin-bottom: 22px; }
+
+  .timeline { list-style: none; border-left: 1px solid var(--line); padding-left: 22px; }
+  .timeline > li { position: relative; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 20px; padding-bottom: 30px; }
+  .timeline > li::before { content: ""; position: absolute; left: -27px; top: 8px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--cyan); }
+  .when { font: 12px var(--mono); color: var(--dim); padding-top: 4px; }
+  .timeline h3 { font: 700 22px var(--display); }
+  .role { color: var(--violet); font-size: 14px; margin-bottom: 6px; }
+  .timeline ul { padding-left: 18px; color: var(--soft); font-size: 15px; display: grid; gap: 5px; }
+  .timeline ul li::marker { color: var(--mint); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 14px; }
+  .card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 10px; transition: border-color .25s, transform .25s; }
+  .card:hover { border-color: rgba(139,123,255,.5); transform: translateY(-2px); }
+  .kind { font: 11px var(--mono); color: var(--soft); text-transform: uppercase; letter-spacing: .1em; }
+  .card h3 { font: 800 24px var(--display); letter-spacing: -.02em; }
+  .card h3 a { text-decoration: none; display: inline-block; padding: 4px 0; }
+  .card h3 a:hover { color: var(--cyan); }
+  .stat { font-size: 13px; color: var(--soft); }
+  .stat b { font: 800 18px var(--display); color: var(--gold); margin-right: 4px; }
+  .blurb { font-size: 14.5px; color: #c4c1df; flex: 1; }
+  .links { display: flex; gap: 22px; font: 12px var(--mono); }
+  .links a { color: var(--cyan); text-decoration: none; display: inline-block; padding: 10px 0; }
+  .links a:hover { text-decoration: underline; }
+
+  .two { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; }
+  .two h2 + * { margin-bottom: 36px; }
+  .skills { display: grid; gap: 14px; }
+  .skills dt { font: 12px var(--mono); color: var(--soft); margin-bottom: 6px; }
+  .plain { list-style: none; color: var(--soft); }
+  .plain a { color: var(--cyan); }
+  .edu { color: var(--soft); line-height: 1.7; }
+  .edu b { color: var(--text); font-weight: 600; }
+  .edu span { font: 12px var(--mono); color: var(--dim); }
+
+  .cta { text-align: center; padding: 60px 0 20px; border-top: 1px solid var(--line); }
+  .mail { font: 800 clamp(20px, 4.4vw, 40px) var(--display); color: var(--pink); text-decoration: none; overflow-wrap: anywhere; }
+  .mail:hover { text-decoration: underline; }
+
+  @media (max-width: 760px) {
+    .timeline > li { grid-template-columns: 1fr; gap: 4px; }
+    .two { grid-template-columns: 1fr; gap: 0; }
+  }
+</style>

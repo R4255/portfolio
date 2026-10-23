@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="404">
+  <main id="content" class="nf">
+    <p class="tag">404 · not found</p>
+    <h1>This token was evicted.</h1>
+    <p>Least recently used, probably. The page you wanted isn't here.</p>
+    <div class="pills"><a class="pill solid" href="/">Back to the galaxy</a><a class="pill" href="/work">See my work</a></div>
+  </main>
+</Base>
+
+<style>
+  .nf { min-height: 80svh; display: grid; place-content: center; text-align: center; padding: 120px var(--gutter) 60px; gap: 14px; }
+  h1 { font: 800 clamp(34px, 7vw, 72px)/1 var(--display); letter-spacing: -.04em; }
+  p { color: var(--soft); }
+  .pills { justify-content: center; margin-top: 10px; }
+</style>

@@ -4,7 +4,7 @@ import { profile, projects } from '../data/site.js';
 
 const p = Object.fromEntries(projects.map(x => [x.slug, x]));
 const systems = ['distributed-cache', 'log-store', 'triton', 'url-shortener'].map(s => p[s]);
-const sections = ['Intro', 'Converse', 'nanoserve', 'Hybrid RAG', 'Systems', 'Experience', 'Contact'];
+const sections = ['Intro', 'Converse', 'Hybrid RAG', 'Systems', 'Experience', 'Contact'];
 ---
 <Base solidNav={false} hud={true}>
   <canvas id="galaxy" aria-hidden="true"></canvas>
@@ -20,7 +20,7 @@ const sections = ['Intro', 'Converse', 'nanoserve', 'Hybrid RAG', 'Systems', 'Ex
         <h1 id="hero-title" class="sr-only">{profile.name}</h1>
         <p class="kicker">{profile.role}</p>
         <p class="lede">I build the systems that serve <em>requests and models</em>, and then I measure them.</p>
-        <p class="sub">Backend at <b>Spinny</b>, previously <b>Tata 1mg</b>. Event-driven services at work; LLM agents, inference engines and retrieval on the side, each with an eval or a benchmark.</p>
+        <p class="sub">Backend at <b>Spinny</b>, previously <b>Tata 1mg</b>. Event-driven services at work; LLM agents and retrieval systems on the side, each with an eval or a benchmark.</p>
         <ul class="cue" aria-hidden="true">
           <li>scroll to reshape</li><li class="fine-only">move to disturb</li><li><span class="fine-only">hold</span><span class="touch-only">long-press</span> for a black hole</li>
         </ul>
@@ -43,25 +43,10 @@ const sections = ['Intro', 'Converse', 'nanoserve', 'Hybrid RAG', 'Systems', 'Ex
       </article>
     </section>
 
-    <section data-form="kv" aria-labelledby="s-nano">
-      <div class="stage" aria-hidden="true"></div>
-      <article class="panel">
-        <p class="tag">02 · AI infra · from scratch</p>
-        <h2 id="s-nano">nanoserve</h2>
-        <p>An LLM inference engine I wrote to understand serving end to end. The grid is a <b>paged KV cache</b>: memory handed out in blocks as requests arrive, freed when they finish, preempted when memory runs short.</p>
-        <dl class="metrics">
-          <div><dt class="c-cyan">3.6×</dt><dd>faster decoding with my own KV cache, checked token-for-token against Hugging Face</dd></div>
-          <div><dt class="c-mint">7.3×</dt><dd>throughput from continuous batching on the same laptop</dd></div>
-          <div><dt class="c-violet">94%</dt><dd>KV memory utilization once paged, up from 24%</dd></div>
-        </dl>
-        <div class="pills"><a class="pill solid" href={p.nanoserve.case}>Case study →</a><a class="pill" href={p.nanoserve.repo} target="_blank" rel="noopener">GitHub ↗</a></div>
-      </article>
-    </section>
-
     <section data-form="sphere" aria-labelledby="s-rag">
       <div class="stage" aria-hidden="true"></div>
       <article class="panel">
-        <p class="tag">03 · AI · retrieval</p>
+        <p class="tag">02 · AI · retrieval</p>
         <h2 id="s-rag">Hybrid RAG</h2>
         <p>BM25 and dense embeddings fused with Reciprocal Rank Fusion, reranked by a cross-encoder, streamed with citations. <b class="fine-only">Move your cursor over the sphere: you're the query, and the gold points are your nearest neighbours.</b><b class="touch-only">The gold points are a query's nearest neighbours.</b></p>
         <dl class="metrics">
@@ -75,7 +60,7 @@ const sections = ['Intro', 'Converse', 'nanoserve', 'Hybrid RAG', 'Systems', 'Ex
     <section data-form="ring" aria-labelledby="s-sys">
       <div class="stage" aria-hidden="true"></div>
       <article class="panel">
-        <p class="tag">04 · Backend · from scratch</p>
+        <p class="tag">03 · Backend · from scratch</p>
         <h2 id="s-sys">Systems, opened up</h2>
         <p>I like knowing how the boxes work, so I build small versions of them. That ring is my distributed cache's <b>consistent hashing</b>: keys land on the ring and walk clockwise to the node that owns them. Change the cluster and see how few keys move.</p>
         <div class="ring-ctl">
@@ -95,7 +80,7 @@ const sections = ['Intro', 'Converse', 'nanoserve', 'Hybrid RAG', 'Systems', 'Ex
     <section data-form="kafka" aria-labelledby="s-exp">
       <div class="stage" aria-hidden="true"></div>
       <article class="panel">
-        <p class="tag">05 · Backend · in production</p>
+        <p class="tag">04 · Backend · in production</p>
         <h2 id="s-exp">Shipping at scale</h2>
         <div class="jobs">
           <div class="job"><p><b>Spinny</b> <span>SDE I, Backend · 2026 – now</span></p>
@@ -110,7 +95,7 @@ const sections = ['Intro', 'Converse', 'nanoserve', 'Hybrid RAG', 'Systems', 'Ex
     <section data-form="hi" aria-labelledby="s-hi">
       <div class="stage" aria-hidden="true"></div>
       <article class="panel">
-        <p class="tag">06 · Contact</p>
+        <p class="tag">05 · Contact</p>
         <h2 id="s-hi">Let's build something.</h2>
         <p>I'm open to <b>{profile.openTo}</b>: services that have to stay up, and the AI systems that run on them.</p>
         <a class="email" href={`mailto:${profile.email}`}>{profile.email}</a>

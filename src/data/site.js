@@ -58,13 +58,6 @@ export const projects = [
     case: '/projects/converse', repo: 'https://github.com/R4255/converse',
   },
   {
-    slug: 'nanoserve', name: 'nanoserve', kind: 'LLM inference engine', featured: true,
-    blurb: 'An LLM inference engine written from scratch: my own Qwen2 forward pass, KV cache, continuous batching, a paged KV cache with preemption, int8/int4 quantization and speculative decoding.',
-    stat: '7.3×', statLabel: 'throughput from continuous batching, same hardware',
-    stack: ['PyTorch', 'MPS', 'Paged KV', 'int8 / int4', 'Speculative decoding'],
-    case: '/projects/nanoserve', repo: 'https://github.com/R4255/nanoserve',
-  },
-  {
     slug: 'hybrid-rag', name: 'Hybrid RAG', kind: 'Retrieval service + eval harness', featured: true,
     blurb: 'BM25 and dense retrieval fused with Reciprocal Rank Fusion, reranked by a cross-encoder, served over FastAPI with SSE streaming, citations and a semantic cache.',
     stat: 'nDCG@10 0.728', statLabel: 'on BEIR SciFact, up from 0.646 for BM25',

@@ -17,7 +17,7 @@ npm run preview    # serve dist/ locally
 |---|---|
 | Profile, links, experience, project cards, skills | `src/data/site.js` |
 | Home page sections (text next to each particle shape) | `src/pages/index.astro` |
-| Particle engine and the shapes (name, eval bars, KV cache, sphere, hash ring, Kafka, SAY HI) | `src/scripts/galaxy.js` |
+| Particle engine and the shapes (name, eval bars, sphere, hash ring, Kafka, SAY HI) | `src/scripts/galaxy.js` |
 | Case studies (Markdown) | `src/pages/projects/*.md` |
 | Classic view | `src/pages/work.astro` |
 | Share image, screenshots, demo video | `public/` |

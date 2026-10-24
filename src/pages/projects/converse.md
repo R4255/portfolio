@@ -12,7 +12,7 @@ stats:
 links:
   - { href: "#demo", label: "Watch the demo ▶" }
 stack: [FastAPI, Ollama, Qwen2.5, MLX LoRA, PostgreSQL, pgvector, BM25, Cross-encoder, SQS, EventBridge Scheduler, LocalStack, Podman, React, SSE, MCP]
-next: { href: /projects/nanoserve, label: nanoserve }
+next: { href: /projects/hybrid-rag, label: Hybrid RAG }
 ---
 
 <figure id="demo">

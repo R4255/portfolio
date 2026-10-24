@@ -93,9 +93,6 @@ export function initGalaxy() {
     return o;
   }
 
-  const KC = 10, KR = 6, KB = 34, KG = 9, KPER = Math.ceil(N / (KC * KR)), KM = Math.ceil(Math.sqrt(KPER)), KSP = KB / KM;
-  const KV_SN = new Float32Array(KC * KR), KV_PH = new Float32Array(KC * KR);
-  const KOX = -(KC * KB + (KC - 1) * KG) / 2, KOY = -(KR * KB + (KR - 1) * KG) / 2;
 
   const UX = new Float32Array(N), UY = new Float32Array(N), UZ = new Float32Array(N);
   for (let i = 0; i < N; i++) { const y = 1 - 2 * (i + .5) / N, r = Math.sqrt(1 - y * y), th = i * 2.399963; UX[i] = Math.cos(th) * r; UY[i] = y; UZ[i] = Math.sin(th) * r; }
@@ -172,35 +169,6 @@ export function initGalaxy() {
           const x = cx + (BX0 + j * (BW + BG) + BW / 2) * s;
           label(v.toFixed(1) + '%', x, cy + (BASE - bh(v) - 12) * s, j === 4 ? '#ffd166' : '#e8e6ff', 'center', fz);
           label(RUNS[j], x, cy + (BASE + 30) * s, '#a3a0c6', 'center', fz);
-        });
-      },
-    },
-
-    kv: {
-      w: 470, h: 380, util: 0,
-      compute(t, o) {
-        const { cx, cy, s } = stage(this.w, this.h); let alloc = 0;
-        const sn = KV_SN, ph = KV_PH;
-        for (let b = 0; b < KC * KR; b++) { ph[b] = t * (.55 + hash(b) * .7) + hash(b + 99) * TAU; sn[b] = Math.sin(ph[b]); if (sn[b] > -.15) alloc++; }
-        this.util = alloc / (KC * KR);
-        for (let i = 0; i < active; i++) {
-          const b = i % (KC * KR), slot = Math.floor(i / (KC * KR));
-          const bx = KOX + (b % KC) * (KB + KG), by = KOY + Math.floor(b / KC) * (KB + KG);
-          const scale = .35 + .65 * smooth(-.4, .05, sn[b]), on = sn[b] > -.15;
-          const lx = ((slot % KM) + .5) * KSP - KB / 2, ly = (Math.floor(slot / KM) + .5) * KSP - KB / 2;
-          o.x[i] = cx + (bx + KB / 2 + lx * scale) * s; o.y[i] = cy + (by + KB / 2 + ly * scale) * s;
-          const req = Math.floor(ph[b] / TAU);
-          o.c[i] = !on ? 6 : (b * 7 + Math.floor(t * .6)) % 29 === 0 ? 2 : [0, 1, 4][(req + b) % 3];
-        }
-      },
-      labels() {
-        const { cx, cy, s } = stage(this.w, this.h), fz = fontPx(s);
-        label('PAGED KV CACHE · 60 BLOCKS', cx, cy + (KOY - 22) * s, '#a3a0c6', 'center', fz);
-        label(`utilization ${Math.round(this.util * 100)}%`, cx, cy - KOY * s + 30 * s, '#6ef0b0', 'center', fz);
-        if (s < .75) return;
-        [['req A', 0], ['req B', 1], ['req C', 4], ['preempted', 2], ['free', 6]].forEach(([t, c], j) => {
-          const x = cx + (-170 + j * 85) * s, y = cy - KOY * s + 54 * s;
-          lx.fillStyle = PAL[c]; lx.fillRect(x - 30 * s, y - 7, 7, 7); label(t, x - 19 * s, y, '#a3a0c6', 'left', fz - 1);
         });
       },
     },
